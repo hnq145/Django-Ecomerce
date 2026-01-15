@@ -1,0 +1,16 @@
+Django
+django-crispy-forms
+crispy-bootstrap4
+Pillow
+six
+pytest
+pytest-django
+dj-database-url
+dj-static
+gunicorn
+Unipath
+python-decouple
+Markdown
+bleach
+whitenoise
+python-dotenv

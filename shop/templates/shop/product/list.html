@@ -1,0 +1,238 @@
+{% extends "shop/base/base.html" %}
+{% load static %}
+{% block title %}
+{% if category %}{{ category.name }}{% else %}Products{% endif %}
+{% endblock %}
+{% block content %}
+<div class="site-section">
+    <div class="container">
+        
+        <!-- Hero Banner -->
+        <div class="hero-banner mb-5" data-aos="fade-up">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <h1>
+                        {% if category %}
+                            {{ category.name }} Collection
+                        {% else %}
+                            <span data-i18n="Discover Premium Gear">Discover Premium Gear</span>
+                        {% endif %}
+                    </h1>
+                    <p class="mb-4" data-i18n="Everything you need, curated for quality and style. Explore our latest arrivals today.">Everything you need, curated for quality and style. Explore our latest arrivals today.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1. Service Features -->
+        <div class="site-section-services mb-5" data-aos="fade-up" data-aos-delay="100">
+            <div class="row">
+                <div class="col-md-4 d-flex align-items-stretch mb-4 mb-md-0">
+                    <div class="service-item w-100">
+                        <span class="service-icon icon-truck"></span>
+                        <div class="service-text">
+                            <h3 data-i18n="Free Shipping">Free Shipping</h3>
+                            <p data-i18n="On all orders over $50">On all orders over $50</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-stretch mb-4 mb-md-0">
+                    <div class="service-item w-100">
+                        <span class="service-icon icon-refresh2"></span>
+                        <div class="service-text">
+                            <h3 data-i18n="Free Returns">Free Returns</h3>
+                            <p data-i18n="Returns are free within 30 days">Returns are free within 30 days</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-stretch">
+                    <div class="service-item w-100">
+                        <span class="service-icon icon-help"></span>
+                        <div class="service-text">
+                            <h3 data-i18n="24/7 Support">24/7 Support</h3>
+                            <p data-i18n="We are here to help you">We are here to help you</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-md-9 order-2">
+                
+                <!-- Toolbar -->
+                <div class="row mb-4 align-items-center">
+                    <div class="col-md-6">
+                        <span class="text-gray-600">Showing all {{ products|length }} results</span>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-i18n="Sort by">
+                                Sort by
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="?sort=newest" data-i18n="Newest Arrivals">Newest Arrivals</a>
+                                <a class="dropdown-item" href="?sort=price_asc" data-i18n="Price: Low to High">Price: Low to High</a>
+                                <a class="dropdown-item" href="?sort=price_desc" data-i18n="Price: High to Low">Price: High to Low</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-5">
+                    {% for product in products %}
+                    <div class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up">
+                        <div class="block-4 text-center">
+                            <figure class="block-4-image">
+                                <a href="{% url "wishlist:wishlist_add" product.id %}" class="btn-wishlist" title="Add to Wishlist">
+                                    <span class="icon icon-heart"></span>
+                                </a>
+                                <a href="{{ product.get_absolute_url }}">
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid" style="height: 10vw;">
+                                    {% else %}
+                                        <img src="https://dummyimage.com/600x400/cccccc/000000.png&text=No+Image" alt="No Image" class="img-fluid" style="height: 10vw;">
+                                    {% endif %}
+                                </a>
+                                <a href="#quick-view-modal" class="btn-quick-view open-quick-view" 
+                                   data-id="{{ product.id }}"
+                                   data-name="{{ product.name }}"
+                                   data-price="{{ product.price }}"
+                                   data-description="{{ product.description }}"
+                                   data-image="{% if product.image %}{{ product.image.url }}{% else %}https://dummyimage.com/600x400/cccccc/000000.png&text=No+Image{% endif %}"
+                                   data-url="{{ product.get_absolute_url }}">
+                                   <span data-i18n="Quick View">Quick View</span>
+                                </a>
+                            </figure>
+                            <div class="block-4-text p-4">
+                                <h3><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
+                                <p class="mb-0">{{ product.description }}</p>
+                                <p class="text-primary font-weight-bold">${{ product.price }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="row" data-aos="fade-up">
+                    <div class="col-md-12 text-center">
+                        <div class="site-block-27">
+                            <ul>
+                                <li><a href="#">&lt;</a></li>
+                                <li class="active"><span>1</span></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">4</a></li>
+                                <li><a href="#">5</a></li>
+                                <li><a href="#">&gt;</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Deal of the Week Section -->
+            <div class="col-12 mt-5">
+                <div class="site-section-deal text-center" data-aos="zoom-in">
+                    <div class="container deal-content">
+                        <span class="text-uppercase tracking-wider text-warning font-weight-bold mb-2 d-block" data-i18n="Limited Time Offer">Limited Time Offer</span>
+                        <h2 data-i18n="Deal of the Week">Deal of the Week</h2>
+                        <p class="lead mb-4" data-i18n="Get 50% off on all Electronics items. Don't miss out!">Get 50% off on all Electronics items. Don't miss out!</p>
+                        
+                        <div class="deal-timer justify-content-center">
+                            <div class="timer-block">
+                                <span id="days">02</span>
+                                <small data-i18n="Days">Days</small>
+                            </div>
+                            <div class="timer-block">
+                                <span id="hours">14</span>
+                                <small data-i18n="Hours">Hours</small>
+                            </div>
+                            <div class="timer-block">
+                                <span id="minutes">30</span>
+                                <small data-i18n="Mins">Mins</small>
+                            </div>
+                            <div class="timer-block">
+                                <span id="seconds">45</span>
+                                <small data-i18n="Secs">Secs</small>
+                            </div>
+                        </div>
+
+                        <a href="#" class="btn btn-primary btn-lg px-5 rounded-pill shadow-lg" data-i18n="Start Shopping">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Newsletter Section -->
+            <div class="col-12 mt-5">
+                <div class="site-section-newsletter" data-aos="fade-up">
+                    <div class="newsletter-box text-center">
+                        <i class="icon-envelope-open display-4 text-accent mb-3"></i>
+                        <h2 class="mb-2" data-i18n="Subscribe to our Newsletter">Subscribe to our Newsletter</h2>
+                        <p class="text-muted mb-4" data-i18n="Get the latest updates on new products and upcoming sales.">Get the latest updates on new products and upcoming sales.</p>
+                        
+                        <form action="#" class="newsletter-form position-relative">
+                            <input type="email" class="newsletter-input" placeholder="Enter your email address" data-i18n-placeholder="Enter your email address">
+                            <button class="newsletter-btn" data-i18n="Subscribe">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 order-1 mb-5 mb-md-0">
+                <div class="border p-4 rounded mb-4">
+                    <h3 class="mb-3 h6 text-uppercase text-black d-block" data-i18n="Categories">Categories</h3>
+                    <ul class="list-unstyled mb-0">
+                        <li {% if not category %} class="mb-1" {% endif %}>
+                            <a href="{% url "shop:product_list" %}" class="d-flex"><span data-i18n="All">All</span></a>
+                        </li>
+                        {% for c in categories %}
+                        <li {% if category.slug == c.slug %} class="mb-1" {% endif %}>
+                            <a href="{{ c.get_absolute_url }}" class="d-flex"><span data-i18n="{{ c.name }}">{{ c.name }}</span></a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="border p-4 rounded mb-4">
+                    <div class="mb-4">
+                        <h3 class="mb-3 h6 text-uppercase text-black d-block" data-i18n="Filter by Price">Filter by Price</h3>
+                        <form action="{% url "shop:product_list" %}" method="get" id="price-filter-form">
+                            {% if category %}<input type="hidden" name="category_slug" value="{{ category.slug }}">{% endif %}
+                            <div id="slider-range" class="border-primary"></div>
+                            <input type="text" name="text" id="amount" class="form-control border-0 pl-0 bg-white" disabled="" />
+                            <input type="hidden" name="min_price" id="min_price" value="{{ request.GET.min_price|default:0 }}">
+                            <input type="hidden" name="max_price" id="max_price" value="{{ request.GET.max_price|default:500 }}">
+                            <button type="submit" class="btn btn-sm btn-primary mt-3" data-i18n="Filter">Filter</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Quick View Modal -->
+<div id="quick-view-modal" class="white-popup mfp-hide">
+    <div class="row">
+        <div class="col-md-6">
+            <img id="qv-image" src="" alt="Product Image" class="img-fluid">
+        </div>
+        <div class="col-md-6">
+            <h2 id="qv-name" class="text-black"></h2>
+            <p id="qv-price" class="text-primary font-weight-bold h4"></p>
+            <p id="qv-description"></p>
+            <div class="mb-5">
+                <form id="qv-form" action="" method="post">
+                    {% csrf_token %}
+                    <!-- Simplification: manually constructing basic fields or just redirecting to detail -->
+                    <input type="hidden" name="quantity" value="1">
+                    <input type="hidden" name="update" value="False">
+                    <button type="submit" class="buy-now btn btn-sm btn-primary" data-i18n="Add to cart">Add to Cart</button>
+                    <a id="qv-detail-link" href="#" class="btn btn-sm btn-outline-primary" data-i18n="View Details">View Details</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

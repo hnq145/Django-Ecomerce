@@ -1,0 +1,73 @@
+{% extends "shop/base/base.html" %}
+{% load static %}
+{% block title %}
+My Wishlist
+{% endblock %}
+{% block content %}
+<div class="bg-light py-3">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 mb-0"><a href="{% url "shop:product_list" %}">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Wishlist</strong></div>
+    </div>
+  </div>
+</div>
+
+<div class="site-section">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-md-12">
+        <h2 class="h3 mb-3 text-black">My Wishlist</h2>
+      </div>
+      <div class="col-md-12">
+          {% if wishlist|length > 0 %}
+          <div class="site-blocks-table">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="product-thumbnail">Image</th>
+                  <th class="product-name">Product</th>
+                  <th class="product-price">Price</th>
+                  <th class="product-remove">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for product in wishlist %}
+                <tr>
+                  <td class="product-thumbnail">
+                    <a href="{{ product.get_absolute_url }}">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid" style="height: 100px; width: auto;">
+                        {% else %}
+                        <img src="https://dummyimage.com/600x400/cccccc/000000.png&text=No+Image" alt="No Image" class="img-fluid" style="height: 100px; width: auto;">
+                        {% endif %}
+                    </a>
+                  </td>
+                  <td class="product-name">
+                    <h2 class="h5 text-black"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h2>
+                  </td>
+                  <td>${{ product.price }}</td>
+                  <td>
+                    <a href="{% url "wishlist:wishlist_remove" product.id %}" class="btn btn-primary btn-sm height-auto btn-sm">X</a>
+                    <form action="{% url "cart:cart_add" product.id %}" method="post" class="d-inline-block">
+                        {% csrf_token %}
+                        <input type="hidden" name="quantity" value="1">
+                        <input type="hidden" name="update" value="False">
+                        <button type="submit" class="btn btn-outline-primary btn-sm btn-sm">Add to Cart</button>
+                    </form>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="text-center">
+              <p>Your wishlist is empty.</p>
+              <a href="{% url "shop:product_list" %}" class="btn btn-primary btn-sm">Start Shopping</a>
+          </div>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

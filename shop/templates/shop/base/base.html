@@ -1,0 +1,274 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{% block title %}Django E-commerce{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700">
+    <link rel="stylesheet" href="{% static "fonts/icomoon/style.css" %}">
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/magnific-popup.css" %}">
+    <link rel="stylesheet" href="{% static "css/jquery-ui.css" %}">
+    <link rel="stylesheet" href="{% static "css/owl.carousel.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/owl.theme.default.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/aos.css" %}">
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <link rel="stylesheet" href="{% static "css/custom_style.css" %}">
+    <link rel="stylesheet" href="{% static "css/toast.css" %}">
+</head>
+
+<body>
+    <div class="site-wrap">
+        {% include 'shop/base/navbar.html' %}
+        {% block content %}
+        {% endblock %}
+        {% include 'shop/base/footer.html' %}
+        
+        <!-- Back to Top -->
+        <a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+            <i class="icon-keyboard_arrow_up"></i>
+        </a>
+    </div>
+    
+    <div id="toast-container"></div>
+
+    <!-- Scroll Detection Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var backToTop = document.querySelector('.back-to-top');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+            
+            backToTop.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            });
+        });
+    </script>
+    <!-- Theme & Language Logic -->
+    <script>
+        // 1. Theme Logic
+        const themeToggle = document.getElementById('theme-toggle');
+        const icon = themeToggle ? themeToggle.querySelector('span') : null;
+        
+        // Check saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
+        if(icon) {
+            icon.className = savedTheme === 'dark' ? 'icon icon-sun-o' : 'icon icon-moon-o';
+        }
+
+        if(themeToggle) {
+            themeToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                icon.className = newTheme === 'dark' ? 'icon icon-sun-o' : 'icon icon-moon-o';
+            });
+        }
+
+        // 2. Simple Language Logic (Demo)
+        const langToggle = document.getElementById('lang-toggle');
+        const langSpan = langToggle ? langToggle.querySelector('span') : null;
+        let currentLang = localStorage.getItem('lang') || 'EN';
+        
+        // Dictionary
+        const translations = {
+            'VN': {
+                'Home': 'Trang Chủ',
+                'Shop': 'Cửa Hàng',
+                'About': 'Giới Thiệu',
+                'Contact': 'Liên Hệ',
+                'Search': 'Tìm kiếm...',
+                'Discover Premium Gear': 'Khám Phá Thiết Bị Cao Cấp',
+                'Everything you need, curated for quality and style. Explore our latest arrivals today.': 'Tất cả những gì bạn cần, được tuyển chọn về chất lượng và kiểu dáng. Khám phá hàng mới về ngay hôm nay.',
+                'Free Shipping': 'Miễn Phí Vận Chuyển',
+                'On all orders over $50': 'Cho đơn hàng trên 1 triệu',
+                'Free Returns': 'Đổi Trả Miễn Phí',
+                'Returns are free within 30 days': 'Đổi trả trong vòng 30 ngày',
+                '24/7 Support': 'Hỗ Trợ 24/7',
+                'We are here to help you': 'Chúng tôi luôn sẵn sàng',
+                'Deal of the Week': 'Ưu Đãi Tuần Này',
+                'Start Shopping': 'Mua Ngay',
+                'Subscribe to our Newsletter': 'Đăng Ký Nhận Tin',
+                'Get the latest updates on new products and upcoming sales.': 'Nhận thông tin mới nhất về sản phẩm và khuyến mãi.',
+                'Enter your email address': 'Nhập email của bạn',
+                'Subscribe': 'Đăng Ký',
+                
+                // Sidebar & List Page Additions
+                'Categories': 'Danh Mục',
+                'All': 'Tất Cả',
+                'Limited Time Offer': 'Ưu Đãi Có Hạn',
+                'Shop Now': 'Mua Ngay',
+                'Get 50% off on all Electronics items. Don\'t miss out!': 'Giảm giá 50% cho tất cả sản phẩm Điện Tử. Đừng bỏ lỡ!',
+                'Days': 'Ngày',
+                'Hours': 'Giờ',
+                'Mins': 'Phút',
+                'Secs': 'Giây',
+                
+                // Specific Categories (Dynamic Data)
+                'Electronics': 'Điện Tử',
+                'Fashion': 'Thời Trang',
+                'Health': 'Sức Khỏe',
+                'Home': 'Nhà Cửa',
+                'Computers': 'Máy Tính',
+                'Books': 'Sách',
+                
+                // Cart Page
+                'Your shopping cart': 'Giỏ hàng của bạn',
+                'Home': 'Trang Chủ',
+                'Cart': 'Giỏ Hàng',
+                'Image': 'Hình ảnh',
+                'Product': 'Sản phẩm',
+                'Price': 'Giá',
+                'Quantity': 'Số lượng',
+                'Total': 'Tổng',
+                'Remove': 'Xóa',
+                'Continue Shopping': 'Tiếp Tục Mua Sắm',
+                'Coupon': 'Mã Giảm Giá',
+                'Enter your coupon code if you have one.': 'Nhập mã giảm giá nếu bạn có.',
+                'Apply Coupon': 'Áp Dụng',
+                'Cart Totals': 'Tổng Giỏ Hàng',
+                'Proceed To Checkout': 'Thanh Toán Ngay',
+                
+                // Footer
+                'Navigations': 'Điều Hướng',
+                'Sell online': 'Bán hàng trực tuyến',
+                'Features': 'Tính năng',
+                'Shopping cart': 'Giỏ hàng',
+                'Store builder': 'Xây dựng cửa hàng',
+                'Mobile commerce': 'TMĐT trên di động',
+                'Dropshipping': 'Dropshipping',
+                'Website development': 'Phát triển web',
+                'Point of sale': 'Điểm bán hàng',
+                'Hardware': 'Phần cứng',
+                'Software': 'Phần mềm',
+                'Promo': 'Khuyến Mãi',
+                'Finding Your Perfect Shoes': 'Tìm Đôi Giày Hoàn Hảo',
+                'Promo from January 15 - 25, 2025': 'Khuyến mãi từ 15-25 Tháng 1, 2025',
+                'Contact Info': 'Liên Hệ',
+                'Address': '203 Phố Fake, San Francisco, USA',
+                
+                // New Features
+                'Recently Viewed': 'Đã Xem Gần Đây',
+                'Sort by': 'Sắp xếp theo',
+                'Newest Arrivals': 'Hàng Mới Nhất',
+                'Price: Low to High': 'Giá: Thấp đến Cao',
+                'Price: High to Low': 'Giá: Cao đến Thấp',
+                'Add to cart': 'Thêm vào giỏ',
+                'Adding...': 'Đang thêm...',
+                'View Details': 'Xem Chi Tiết'
+            }
+        };
+
+        function updateText() {
+            if(currentLang === 'VN') {
+                if(langSpan) langSpan.textContent = 'EN';
+                
+                const dictionary = translations['VN'];
+                
+                // 1. Text Content Replacement
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if(dictionary[key]) {
+                        if(!el.dataset.originalText) el.dataset.originalText = el.textContent; // Store original once
+                        el.textContent = dictionary[key];
+                    }
+                });
+
+                // 2. Placeholder Replacement
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-placeholder');
+                    if(dictionary[key]) {
+                         if(!el.dataset.originalPlaceholder) el.dataset.originalPlaceholder = el.placeholder;
+                         el.placeholder = dictionary[key];
+                    }
+                });
+                
+            } else {
+                 if(langSpan) langSpan.textContent = 'VN';
+                 
+                 // Restore Text
+                 document.querySelectorAll('[data-i18n]').forEach(el => {
+                     if(el.dataset.originalText) {
+                         el.textContent = el.dataset.originalText;
+                     }
+                 });
+                 
+                 // Restore Placeholders
+                 document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                     if(el.dataset.originalPlaceholder) {
+                         el.placeholder = el.dataset.originalPlaceholder;
+                     }
+                 });
+            }
+        }
+
+        // Apply on load
+        if(currentLang === 'VN') updateText();
+
+        if(langToggle) {
+            langToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentLang = currentLang === 'EN' ? 'VN' : 'EN';
+                localStorage.setItem('lang', currentLang);
+                if(currentLang === 'EN') {
+                    location.reload(); 
+                } else {
+                    updateText();
+                }
+            });
+        }
+
+        // 3. Deal Coundown Timer
+        function makeTimer() {
+            var endTime = new Date("January 25, 2026 12:00:00 PDT");			
+            var endTime = (Date.parse(endTime) / 1000);
+
+            var now = new Date();
+            var now = (Date.parse(now) / 1000);
+
+            var timeLeft = endTime - now;
+
+            var days = Math.floor(timeLeft / 86400); 
+            var hours = Math.floor((timeLeft - (days * 86400)) / 3600);
+            var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600 )) / 60);
+            var seconds = Math.floor((timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60)));
+
+            if (hours < "10") { hours = "0" + hours; }
+            if (minutes < "10") { minutes = "0" + minutes; }
+            if (seconds < "10") { seconds = "0" + seconds; }
+
+            $("#days").html(days);
+            $("#hours").html(hours);
+            $("#minutes").html(minutes);
+            $("#seconds").html(seconds);		
+        }
+
+        setInterval(function() { makeTimer(); }, 1000);
+        
+    </script>
+    <script src="{% static "js/jquery-3.3.1.min.js" %}"></script>
+    <script src="{% static "js/jquery-ui.js" %}"></script>
+    <script src="{% static "js/popper.min.js" %}"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static "js/owl.carousel.min.js" %}"></script>
+    <script src="{% static "js/jquery.magnific-popup.min.js" %}"></script>
+    <script src="{% static "js/aos.js" %}"></script>
+    <script src="{% static "js/main.js" %}"></script>
+    <script src="{% static "js/cart_ajax.js" %}"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+{% extends "shop/base/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+{{ product.name }}
+{% endblock %}
+{% block content %}
+    <div class="bg-light py-3">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 mb-0"><a href="index.html">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">{{ product.name }}</strong></div>
+        </div>
+      </div>
+    </div>  
+
+    <div class="site-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 position-relative">
+             <a href="{% url "wishlist:wishlist_add" product.id %}" class="btn-wishlist-detail" title="Add to Wishlist">
+                <span class="icon icon-heart"></span>
+             </a>
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid">
+            {% else %}
+                <img src="https://dummyimage.com/600x400/cccccc/000000.png&text=No+Image" alt="No Image" class="img-fluid">
+            {% endif %}
+          </div>
+          <div class="col-md-6">
+            <h2 class="text-black mr-2">{{ product.name }}</h2>
+            <p>{{ product.description|linebreaks }}</p>
+            <p><strong class="text-primary h4">${{ product.price }}</strong></p>
+            <div class="mt-5 col-md-5">
+              <form action="{% url "cart:cart_add" product.id %}" method="post">
+                {% csrf_token %}
+                {{ cart_product_form|crispy }}
+                <input type="submit" class="buy-now btn btn-sm btn-primary" value="Add to cart">
+              </form>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-section mt-5">
+      <div class="container">
+        <!-- Reviews Section -->
+        <div class="row mb-5">
+            <div class="col-md-12">
+                <h3 class="h3 mb-4 text-black">Customer Reviews</h3>
+            </div>
+            <div class="col-md-7">
+                {% for review in reviews %}
+                <div class="review-box p-4 mb-3 bg-white rounded shadow-sm border">
+                    <div class="d-flex align-items-center mb-2">
+                        <strong class="mr-2">{{ review.name }}</strong>
+                        <span class="text-warning">
+                            {% for i in "12345"|make_list %}
+                                {% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}
+                            {% endfor %}
+                        </span>
+                        <span class="text-muted ml-auto small">{{ review.created|date:"M d, Y" }}</span>
+                    </div>
+                    <p class="mb-0 text-secondary">{{ review.comment }}</p>
+                </div>
+                {% empty %}
+                <p class="text-muted">No reviews yet. Be the first to review!</p>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-5">
+                <div class="p-4 bg-white rounded shadow-sm border">
+                    <h4 class="h5 mb-3 text-black">Write a Review</h4>
+                    {% if new_review %}
+                    <div class="alert alert-success">
+                        Your review has been submitted successfully!
+                    </div>
+                    {% else %}
+                    <form method="post" class="review-form">
+                        {% csrf_token %}
+                        {{ review_form|crispy }}
+                        <button type="submit" class="btn btn-primary btn-block rounded-pill mt-3">Submit Review</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Products -->
+        <div class="row pt-5 mt-5 border-top">
+          <div class="col-md-12 text-center mb-5">
+             <h2 class="display-5 text-black font-weight-bold">You Might Also Like</h2>
+          </div>
+          
+          {% for r_product in related_products %}
+          <div class="col-sm-6 col-lg-3 mb-4" data-aos="fade-up">
+            <div class="block-4 text-center">
+              <figure class="block-4-image">
+                <a href="{{ r_product.get_absolute_url }}">
+                    {% if r_product.image %}
+                        <img src="{{ r_product.image.url }}" alt="{{ r_product.name }}" class="img-fluid">
+                    {% else %}
+                        <img src="https://dummyimage.com/600x400/cccccc/000000.png&text=No+Image" alt="No Image" class="img-fluid">
+                    {% endif %}
+                </a>
+              </figure>
+              <div class="block-4-text p-4">
+                <h3><a href="{{ r_product.get_absolute_url }}">{{ r_product.name }}</a></h3>
+                <p class="mb-0">{{ r_product.category }}</p>
+                <p class="text-primary font-weight-bold">${{ r_product.price }}</p>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+          <div class="col-12 text-center">
+              <p>No related products found.</p>
+          </div>
+          {% endfor %}
+        </div>
+        
+        <!-- Recently Viewed Products -->
+        {% if viewed_products %}
+        <div class="row pt-5 mt-5 border-top">
+          <div class="col-md-12 text-center mb-5">
+             <h2 class="display-5 text-black font-weight-bold" data-i18n="Recently Viewed">Recently Viewed</h2>
+          </div>
+          
+          {% for v_product in viewed_products %}
+          <div class="col-sm-6 col-lg-3 mb-4" data-aos="fade-up">
+            <div class="block-4 text-center">
+              <figure class="block-4-image">
+                <a href="{{ v_product.get_absolute_url }}">
+                    {% if v_product.image %}
+                        <img src="{{ v_product.image.url }}" alt="{{ v_product.name }}" class="img-fluid">
+                    {% else %}
+                        <img src="https://dummyimage.com/600x400/cccccc/000000.png&text=No+Image" alt="No Image" class="img-fluid">
+                    {% endif %}
+                </a>
+              </figure>
+              <div class="block-4-text p-4">
+                <h3><a href="{{ v_product.get_absolute_url }}">{{ v_product.name }}</a></h3>
+                <p class="text-primary font-weight-bold">${{ v_product.price }}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+{% endblock %}
